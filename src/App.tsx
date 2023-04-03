@@ -1,35 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+
+const addGuestComponent = () => {
+  const [name, setName] = useState("");
+  const [guests, setGuests] = useState<string[]>([]);
+
+  const addGuest = () => {
+    setName("");
+    setGuests([...guests, name]);
+  };
+
+  return (
+    <>
+      <div>
+        <input value={name} onChange={(e) => setName(e.target.value)} />
+        <button onClick={addGuest}>Add Guest</button>
+      </div>
+
+      <div>
+        <h2>Guest List</h2>
+        {guests.map((guest) => {
+          return <li key={guest}>{guest}</li>;
+        })}
+      </div>
+    </>
+  );
+};
+
+type FilteredUser = {
+  id: number;
+  name: string;
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [keyword, setKeyword] = useState("");
+  const [filteredUser, setFilteredUser] = useState<FilteredUser | undefined>();
+
+  const users = [
+    { id: 1, name: "Yohanes" },
+    { id: 2, name: "Ray" },
+    { id: 3, name: "Febriyanto" },
+    { id: 4, name: "Silitonga" },
+  ];
+
+  const searchUser = () => {
+    const searchResult = users.find((user) => user.name == keyword);
+    setFilteredUser(searchResult);
+  };
 
   return (
     <div className="App">
+      <input value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+      <button onClick={searchUser}>Search User</button>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        {filteredUser && filteredUser.name} {filteredUser?.id}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
